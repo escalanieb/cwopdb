@@ -1,3 +1,27 @@
+<?php
+require_once 'db/dbconn.php'; // Ensure correct path
+
+$sql = "SELECT COUNT(*) AS total FROM patients";
+$result = mysqli_query($con, $sql);
+$patients = mysqli_fetch_assoc($result);
+
+$sql = "SELECT COUNT(*) AS total FROM doctors";
+$result = mysqli_query($con, $sql);
+$doctors = mysqli_fetch_assoc($result);
+
+$sql = "SELECT COUNT(*) AS total FROM partners";
+$result = mysqli_query($con, $sql);
+$partners = mysqli_fetch_assoc($result);
+
+$sql = "SELECT COUNT(*) AS total FROM nonstaff";
+$result = mysqli_query($con, $sql);
+$nonstaff = mysqli_fetch_assoc($result);
+
+$sql = "SELECT COUNT(*) AS total FROM staff";
+$result = mysqli_query($con, $sql);
+$staff = mysqli_fetch_assoc($result);
+
+?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -36,11 +60,11 @@
                           Staff Management
                         </a>
                         <ul class="dropdown-menu dropdown-menu-light" style="width: 100%;">
-                            <li><a class="dropdown-item text-dark" href="#">View All Personnels</a></li>
-                            <li><a class="dropdown-item text-dark" href="#">View Doctors</a></li>
-                            <li><a class="dropdown-item text-dark" href="#">View Partners</a></li>
-                            <li><a class="dropdown-item text-dark" href="#">View Non-Ministry Personnels</a></li>
-                            <li><a class="dropdown-item text-dark" href="#">View Ministry Personnels</a></li>
+                        <li><a class="dropdown-item text-dark" href="all.php">View All Personnels</a></li>
+                            <li><a class="dropdown-item text-dark" href="doctors.php">View Doctors</a></li>
+                            <li><a class="dropdown-item text-dark" href="partners.php">View Partners</a></li>
+                            <li><a class="dropdown-item text-dark" href="nonstaff.php">View Non-Ministry Personnels</a></li>
+                            <li><a class="dropdown-item text-dark" href="staff.php">View Ministry Personnels</a></li>
                         </ul>
                     </li>
             </div>
@@ -57,19 +81,31 @@
                       <div class="card me-3" style="width: 25rem;">
                           <div class="card-body">
                             <h6 class="card-subtitle text-body-secondary mb-2">Total Number of Patients</h6>
-                            <h1 class="card-title">2,500</h1>
+                            <h1 class="card-title"><?php echo $patients["total"]; ?></h1>
                           </div>
                         </div>
                         <div class="card me-3" style="width: 25rem;">
                           <div class="card-body">
                               <h6 class="card-subtitle text-body-secondary mb-2">Total Number of Doctors</h6>
-                              <h1 class="card-title">2,500</h1>
+                              <h1 class="card-title"><?php echo $doctors["total"]; ?></h1>
                           </div>
                         </div>
-                        <div class="card" style="width: 25rem;">
+                        <div class="card me-3" style="width: 25rem;">
                           <div class="card-body">
                               <h6 class="card-subtitle text-body-secondary mb-2">Total Number of Partners</h6>
-                              <h1 class="card-title">2,500</h1>
+                              <h1 class="card-title"><?php echo $partners["total"]; ?></h1>
+                          </div>
+                        </div>
+                        <div class="card me-3" style="width: 25rem;">
+                          <div class="card-body">
+                              <h6 class="card-subtitle text-body-secondary mb-2">Total Number of Non-ministry Personnels</h6>
+                              <h1 class="card-title"><?php echo $nonstaff["total"]; ?></h1>
+                          </div>
+                        </div>
+                        <div class="card me-3" style="width: 25rem;">
+                          <div class="card-body">
+                              <h6 class="card-subtitle text-body-secondary mb-2">Total Number of Ministry Personnels</h6>
+                              <h1 class="card-title"><?php echo $staff["total"]; ?></h1>
                           </div>
                         </div>
                   </div>

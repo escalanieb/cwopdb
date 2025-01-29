@@ -1,5 +1,5 @@
 <?php
-require_once 'data/dbconn.php';
+require_once '../db/dbconn.php';
 
 // Enable error reporting to catch issues
 error_reporting(E_ALL);

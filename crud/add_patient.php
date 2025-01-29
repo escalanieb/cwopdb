@@ -1,5 +1,5 @@
 <?php
-require_once 'data/dbconn.php'; // Ensure correct path
+require_once '../db/dbconn.php'; // Ensure correct path
 
 // Enable error reporting
 error_reporting(E_ALL);

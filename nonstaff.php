@@ -1,13 +1,13 @@
 <?php
 session_start();
-require_once 'data/dbconn.php';
+require_once 'db/dbconn.php';
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
   // Fetch the product details from the database
-  $sql = "SELECT * FROM patients";
+  $sql = "SELECT * FROM nonstaff";
   $result = mysqli_query($con, $sql);
 ?>
 
@@ -25,7 +25,7 @@ error_reporting(E_ALL);
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
 
     <style>
-    #patientTable_wrapper {
+    #nonstaffTable_wrapper {
     width: 100% !important;
     }
     </style>
@@ -63,7 +63,7 @@ error_reporting(E_ALL);
                         </a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-white active" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                           Patient Management
                         </a>
                         <ul class="dropdown-menu dropdown-menu-light" style="width: 100%;">
@@ -71,68 +71,39 @@ error_reporting(E_ALL);
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle text-white active" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                           Staff Management
                         </a>
                         <ul class="dropdown-menu dropdown-menu-light" style="width: 100%;">
-                            <li><a class="dropdown-item text-dark" href="#">View All Personnels</a></li>
-                            <li><a class="dropdown-item text-dark" href="#">View Doctors</a></li>
-                            <li><a class="dropdown-item text-dark" href="#">View Partners</a></li>
-                            <li><a class="dropdown-item text-dark" href="#">View Non-Ministry Personnels</a></li>
-                            <li><a class="dropdown-item text-dark" href="#">View Ministry Personnels</a></li>
+                            <li><a class="dropdown-item text-dark" href="all.php">View All Personnels</a></li>
+                            <li><a class="dropdown-item text-dark" href="doctors.php">View Doctors</a></li>
+                            <li><a class="dropdown-item text-dark" href="partners.php">View Partners</a></li>
+                            <li><a class="dropdown-item text-dark" href="nonstaff.php">View Non-Ministry Personnels</a></li>
+                            <li><a class="dropdown-item text-dark" href="staff.php">View Ministry Personnels</a></li>
                         </ul>
                     </li>
             </div>
     
             <div class="d-flex flex-column flex-fill p-5 bg-light" style="width: auto; margin-left: 15%;">
-                <div class="container-fluid">
-                    <h1>Welcome, Admin</h1>
-                    <h6>Welcome to the Dashboard for Community Wellness Outreach Program 2025</h6>
-                </div>
+                
                 <div class="container-fluid mt-5">
-                    <h5>General Results</h5>
-                    <hr>
-                    <div class="d-flex flex-row flex-fill justify-content-start">
-                        <div class="card me-3" style="width: 25rem;">
-                            <div class="card-body">
-                              <h6 class="card-subtitle text-body-secondary mb-2">Total Number of Patients</h6>
-                              <h1 class="card-title">2,500</h1>
-                            </div>
-                          </div>
-                          <div class="card me-3" style="width: 25rem;">
-                            <div class="card-body">
-                                <h6 class="card-subtitle text-body-secondary mb-2">Total Number of Doctors</h6>
-                                <h1 class="card-title">2,500</h1>
-                            </div>
-                          </div>
-                          <div class="card" style="width: 25rem;">
-                            <div class="card-body">
-                                <h6 class="card-subtitle text-body-secondary mb-2">Total Number of Partners</h6>
-                                <h1 class="card-title">2,500</h1>
-                            </div>
-                          </div>
-                    </div>
+                <h1>Non-ministry Personnels</h1>
+                <hr>
+                <div class="justify-content-end mb-3">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addNonstaffModel">
+                    Add Non-ministry Personnels
+                </button>
                 </div>
-
-                <div class="container-fluid mt-5">
-    <h5>Detailed Results</h5>
-    <hr>
-    <div class="d-flex justify-content-end mb-3">
-    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPatientModel">
-        Add Patient
-    </button>
-</div>
     <div class="d-flex flex-row justify-content-center">
-        <table class="table table-hover w-100" id="patientTable">
+        <table class="table table-hover w-100" id="nonstaffTable">
             <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">First Name</th>
-                    <th scope="col">Last Name</th>
-                    <th scope="col">Age</th>
-                    <th scope="col">Gender</th>
-                    <th scope="col">Services</th>
-                    <th scope="col">Status</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Position</th>
+                    <th scope="col">Organization</th>
+                    <th scope="col">E-mail</th>
+                    <th scope="col">Number</th>
                     <th scope="col">Action</th>
                 </tr>
             </thead>
@@ -142,15 +113,14 @@ error_reporting(E_ALL);
                 while ($row = mysqli_fetch_assoc($result)) {
                     echo "<tr>";
                     echo "<td>" . htmlspecialchars($row['ID'] ?? 'N/A') . "</td>";
-                    echo "<td>" . htmlspecialchars($row['firstName'] ?? 'N/A') . "</td>";
-                    echo "<td>" . htmlspecialchars($row['lastName'] ?? 'N/A') . "</td>";
-                    echo "<td>" . htmlspecialchars($row['age'] ?? 'N/A') . "</td>";
-                    echo "<td>" . htmlspecialchars($row['gender'] ?? 'N/A') . "</td>";
-                    echo "<td>" . htmlspecialchars($row['services'] ?? 'N/A') . "</td>";
-                    echo "<td>" . (isset($row['status']) && $row['status'] == 0 ? 'Done' : 'Ongoing') . "</td>";
+                    echo "<td>" . htmlspecialchars($row['name'] ?? 'N/A') . "</td>";
+                    echo "<td>" . htmlspecialchars($row['position'] ?? 'N/A') . "</td>";
+                    echo "<td>" . htmlspecialchars($row['organization'] ?? 'N/A') . "</td>";
+                    echo "<td>" . htmlspecialchars($row['email'] ?? 'N/A') . "</td>";
+                    echo "<td>" . htmlspecialchars($row['number'] ?? 'N/A') . "</td>";
                     echo '<td>
                         <a href="#" class="editBtn" data-id="' . htmlspecialchars($row['ID'] ?? '0') . '" 
-                           data-bs-toggle="modal" data-bs-target="#editPatientModel" 
+                           data-bs-toggle="modal" data-bs-target="#editNonstaffModel" 
                            style="color: Blue; font-size: 15px; text-decoration: none;">Edit</a>  
                         <a href="#" class="deleteBtn" data-id="' . htmlspecialchars($row['ID'] ?? '0') . '" 
                            style="color: Red; font-size: 15px; text-decoration: none;">Delete</a>
@@ -169,15 +139,15 @@ $(document).ready(function() {
     
     setTimeout(function() {
         console.log("Initializing DataTable now...");
-        $('#patientTable').DataTable({
+        $('#nonstaffTable').DataTable({
             responsive: true,
             autoWidth: false,
-            lengthMenu: [5, 10, 25, 50],
-            pageLength: 5,
+            lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+            pageLength: 25, // Default to showing all rows
             language: {
-                search: "Search Patients:",
+                search: "Search Non-staffs:",
                 lengthMenu: "Show _MENU_ entries",
-                info: "Showing _START_ to _END_ of _TOTAL_ patients"
+                info: "Showing _START_ to _END_ of _TOTAL_ nonstaffs"
             },
             order: [[0, "asc"]], 
             paging: true,
@@ -195,77 +165,42 @@ $(document).ready(function() {
         <div class="container-fluid mt-5">
 
        <!-- Add Modal -->
-<div class="modal fade" id="addPatientModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="addNonstaffModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <div class="f-flex flex-column">
           <h1 class="modal-title fs-5" id="exampleModalLabel">Community Wellness Outreach Program</h1>
-          <small>Add Patients</small>
+          <small>Add Non-ministry Personnels</small>
         </div>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <!-- Add Form -->
-        <form id="addPatientForm" method="POST" action="add_patient.php">
+        <form id="addNonstaffForm" method="POST" action="crud/add_nonstaff.php">
 
           <div class="d-flex flex-row mb-3">
-            <h6>Medical Information Needed</h6>
+          <h6>Information Needed</h6>
           </div>
           <div class="input-group mb-3">
-            <span class="input-group-text">First Name</span>
-            <input type="text" name="firstName" aria-label="First name" class="form-control" required>
-            <span class="input-group-text">Last Name</span>
-            <input type="text" name="lastName" aria-label="Last name" class="form-control" required>
+            <span class="input-group-text">Name</span>
+            <input type="text" name="name" aria-label="First name" class="form-control" required>
           </div>
           <div class="input-group mb-3">
-            <span class="input-group-text">Age</span>
-            <input type="text" name="age" aria-label="Age" class="form-control" required>
-          </div>
-          <div class="d-flex flex-row mb-3">
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="gender" id="flexRadioDefault1" value="male" required>
-              <label class="form-check-label" for="flexRadioDefault1">Male</label>
-            </div>
-            <div class="form-check ms-3">
-              <input class="form-check-input" type="radio" name="gender" id="flexRadioDefault2" value="female" required>
-              <label class="form-check-label" for="flexRadioDefault2">Female</label>
-            </div>
-          </div>
-          <div class="d-flex flex-row mb-3">
-            <select class="form-select" name="service" aria-label="Default select example" required>
-              <option selected disabled>Select Medical Service</option>
-              <option value="Medical Adult">Medical Adult</option>
-              <option value="Medical Pedia">Medical Pedia</option>
-              <option value="Physical Therapy">Physical Therapy</option>
-              <option value="Pre-Natal Check Up">Pre-Natal Check Up</option>
-              <option value="Dental Extraction">Dental Extraction</option>
-              <option value="Eye Screening">Eye Screening</option>
-              <option value="Pap Smear">Pap Smear</option>
-            </select>
-          </div>
-          <div class="d-flex flex-row mb-3">
-            <h6>Contact Details and Address</h6>
+            <span class="input-group-text">Position</span>
+            <input type="text" name="position" aria-label="First name" class="form-control" required>
           </div>
           <div class="input-group mb-3">
-            <span class="input-group-text">Facebook</span>
-            <input type="text" name="fbaccount" aria-label="Social" class="form-control">
+            <span class="input-group-text">Organization</span>
+            <input type="text" name="organization" aria-label="Partners" class="form-control">
           </div>
           <div class="input-group mb-3">
             <span class="input-group-text">Email</span>
             <input type="email" name="email" aria-label="Email" class="form-control">
           </div>
           <div class="input-group mb-3">
-            <span class="input-group-text">Complete Address</span>
-            <input type="text" name="address" aria-label="Address" class="form-control" required>
-          </div>
-          <div class="input-group mb-3">
             <span class="input-group-text">Contact Number</span>
             <input type="text" name="number" aria-label="Contact" class="form-control" required>
-          </div>
-          <div class="input-group mb-3">
-            <span class="input-group-text">Area (Barangay/Subdivision)</span>
-            <input type="text" name="area" aria-label="Area" class="form-control">
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -274,7 +209,7 @@ $(document).ready(function() {
         </form>
         <!-- Success Message -->
         <div id="addSuccessMessage" class="alert alert-success mt-3" style="display: none;">
-          Patient added successfully!
+          Non-staff added successfully!
         </div>
       </div>
     </div>
@@ -283,21 +218,21 @@ $(document).ready(function() {
 
 <script>
   $(document).ready(function() {
-    $("#addPatientForm").submit(function(e) {
+    $("#addNonstaffForm").submit(function(e) {
       e.preventDefault(); // Prevent page reload
 
       $.ajax({
         type: "POST",
-        url: "add_patient.php",
+        url: "crud/add_nonstaff.php",
         data: $(this).serialize(),
         dataType: "json",
         success: function(response) {
           if (response.status === "success") {
-            $("#addPatientForm")[0].reset(); // Clear the form
+            $("#addNonstaffForm")[0].reset(); // Clear the form
             $("#addSuccessMessage").fadeIn(); // Show success message
             setTimeout(function() {
               $("#addSuccessMessage").fadeOut();
-              $("#addPatientModel").modal("hide"); // Close the modal
+              $("#addNonstaffModel").modal("hide"); // Close the modal
               location.reload(); // Refresh the page to update the table
             }, 1500);
           } else {
@@ -310,13 +245,13 @@ $(document).ready(function() {
 </script>
 
 
-<!-- Fetch Patient Data for Editing -->
+<!-- Fetch Nonstaff Data for Editing -->
 <?php
 if (isset($_GET['id'])) {
-    require_once 'data/dbconn.php'; // Ensure correct database connection
+    require_once 'db/dbconn.php'; // Ensure correct database connection
 
     $id = mysqli_real_escape_string($con, $_GET['id']); // Get the ID safely
-    $query = "SELECT * FROM patients WHERE ID = '$id'";
+    $query = "SELECT * FROM nonstaff WHERE ID = '$id'";
     $result = mysqli_query($con, $query);
 
     if ($result && mysqli_num_rows($result) > 0) {
@@ -329,78 +264,44 @@ if (isset($_GET['id'])) {
 }
 ?>
 <!-- Edit Modal -->
-<div class="modal fade" id="editPatientModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="editNonstaffModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <div class="f-flex flex-column">
           <h1 class="modal-title fs-5" id="exampleModalLabel">Community Wellness Outreach Program</h1>
-          <small>Update Patient</small>
+          <small>Update Non-staff</small>
         </div>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <!-- Update Form -->
-        <form id="editPatientForm" method="POST" action="update_patient.php">
-          <!-- Hidden Field to Store Patient ID -->
-          <input type="hidden" name="ID">
+        <form id="editNonstaffForm" method="POST" action="crud/edit_nonstaff.php">
+        <input type="hidden" name="ID">
 
-          <div class="input-group mb-3">
-            <span class="input-group-text">First Name</span>
-            <input type="text" name="firstName" class="form-control">
-            <span class="input-group-text">Last Name</span>
-            <input type="text" name="lastName" class="form-control">
+        <div class="d-flex flex-row mb-3">
+          <h6>Information Needed</h6>
           </div>
           <div class="input-group mb-3">
-            <span class="input-group-text">Age</span>
-            <input type="text" name="age" class="form-control">
+            <span class="input-group-text">Name</span>
+            <input type="text" name="name" aria-label="First name" class="form-control" required>
           </div>
-          <div class="d-flex flex-row mb-3">
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="gender" id="maleRadio" value="Male">
-                <label class="form-check-label" for="maleRadio">Male</label>
-            </div>
-            <div class="form-check ms-3">
-                <input class="form-check-input" type="radio" name="gender" id="femaleRadio" value="Female">
-                <label class="form-check-label" for="femaleRadio">Female</label>
-            </div>
-          </div>
-
-          <div class="d-flex flex-row mb-3">
-            <select class="form-select" name="services">
-              <option value="">Select Medical Service</option>
-              <option value="Medical Adult">Medical Adult</option>
-              <option value="Medical Pedia">Medical Pedia</option>
-              <option value="Physical Therapy">Physical Therapy</option>
-              <option value="Pre-Natal Check Up">Pre-Natal Check Up</option>
-              <option value="Dental Extraction">Dental Extraction</option>
-              <option value="Eye Screening">Eye Screening</option>
-              <option value="Pap Smear">Pap Smear</option>
-            </select>
-          </div>
-          
           <div class="input-group mb-3">
-            <span class="input-group-text">Facebook</span>
-            <input type="text" name="fbaccount" class="form-control">
+            <span class="input-group-text">Position</span>
+            <input type="text" name="position" aria-label="First name" class="form-control" required>
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">Organization</span>
+            <input type="text" name="organization" aria-label="Partners" class="form-control">
           </div>
           <div class="input-group mb-3">
             <span class="input-group-text">Email</span>
-            <input type="text" name="email" class="form-control">
-          </div>
-          <div class="input-group mb-3">
-            <span class="input-group-text">Address</span>
-            <input type="text" name="address" class="form-control">
+            <input type="email" name="email" aria-label="Email" class="form-control">
           </div>
           <div class="input-group mb-3">
             <span class="input-group-text">Contact Number</span>
-            <input type="text" name="number" class="form-control">
+            <input type="text" name="number" aria-label="Contact" class="form-control" required>
           </div>
-
-          <div class="input-group mb-3">
-            <span class="input-group-text">Area (Barangay/Subdivision)</span>
-            <input type="text" name="area" class="form-control">
-          </div>
-
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-primary">Update</button>
@@ -415,12 +316,12 @@ if (isset($_GET['id'])) {
 <!-- jQuery AJAX for Updating -->
 <script>
   $(document).ready(function() {
-    $("#editPatientForm").submit(function(e) {
+    $("#editNonstaffForm").submit(function(e) {
         e.preventDefault(); // Prevent page reload
 
         $.ajax({
             type: "POST",
-            url: "update_patient.php", // Ensure correct path
+            url: "crud/update_nonstaff.php", // Ensure correct path
             data: $(this).serialize(),
             dataType: "json",
             success: function(response) {
@@ -434,7 +335,7 @@ if (isset($_GET['id'])) {
             },
             error: function(xhr, status, error) {
                 console.log("AJAX Error:", error); // Debugging
-                alert("Failed to update patient. Please check the console for details.");
+                alert("Failed to update nonstaff. Please check the console for details.");
             }
         });
     });
@@ -445,34 +346,22 @@ if (isset($_GET['id'])) {
 <script>
 $(document).ready(function() {
     $(".editBtn").click(function() {
-        var patientId = $(this).data("id"); // Get patient ID from button
+        var nonstaffId = $(this).data("id"); // Get nonstaff ID from button
 
         $.ajax({
             type: "GET",
-            url: "fetch_patient.php?id=" + patientId, // Fetch patient details
+            url: "crud/fetch_nonstaff.php?id=" + nonstaffId, // Fetch nonstaff details
             dataType: "json",
             success: function(response) {
                 if (response.status === "success") {
                     // Populate modal fields
                     $("input[name='ID']").val(response.data.ID);
-                    $("input[name='firstName']").val(response.data.firstName);
-                    $("input[name='lastName']").val(response.data.lastName);
-                    $("input[name='age']").val(response.data.age);
+                    $("input[name='name']").val(response.data.name);
+                    $("input[name='position']").val(response.data.position);
+                    $("input[name='organization']").val(response.data.organization);
                     $("input[name='email']").val(response.data.email);
-                    $("input[name='address']").val(response.data.address);
                     $("input[name='number']").val(response.data.number);
-                    $("input[name='fbaccount']").val(response.data.fbaccount);
-                    $("input[name='area']").val(response.data.area);
-                    
-                    // Set gender radio button
-                    if (response.data.gender.toLowerCase() === "male") {
-                        $("#editPatientModel input[name='gender'][value='Male']").prop("checked", true);
-                    } else if (response.data.gender.toLowerCase() === "female") {
-                        $("#editPatientModel input[name='gender'][value='Female']").prop("checked", true);
-                    }
-
-                    // Set service dropdown
-                    $("select[name='services']").val(response.data.services);
+                  
 
                     console.log("Loaded data into modal:", response.data);
                 } else {
@@ -480,7 +369,7 @@ $(document).ready(function() {
                 }
             },
             error: function() {
-                alert("Failed to fetch patient details.");
+                alert("Failed to fetch nonstaff details.");
             }
         });
     });
@@ -491,13 +380,13 @@ $(document).ready(function() {
   $(document).ready(function() {
     $(".deleteBtn").click(function(e) {
         e.preventDefault(); // Prevent default link behavior
-        var patientId = $(this).data("id");
+        var nonstaffId = $(this).data("id");
 
-        if (confirm("Are you sure you want to delete this patient?")) {
+        if (confirm("Are you sure you want to delete this nonstaff?")) {
             $.ajax({
                 type: "POST",
-                url: "delete_patient.php", // Ensure correct path
-                data: { id: patientId },
+                url: "crud/delete_nonstaff.php", // Ensure correct path
+                data: { id: nonstaffId },
                 dataType: "json",
                 success: function(response) {
                     console.log("Server Response:", response); // Debugging
@@ -511,7 +400,7 @@ $(document).ready(function() {
                 },
                 error: function(xhr, status, error) {
                     console.log("AJAX Error:", error);
-                    alert("Failed to delete patient. Please check the console for details.");
+                    alert("Failed to delete nonstaff. Please check the console for details.");
                 }
             });
         }

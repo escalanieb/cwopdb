@@ -1,5 +1,5 @@
 <?php
-require_once 'data/dbconn.php'; // Database connection
+require_once '../db/dbconn.php'; // Database connection
 
 header('Content-Type: application/json'); // Return JSON response
 
@@ -12,14 +12,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $id = mysqli_real_escape_string($con, $_POST['id']);
 
         // Delete patient record
-        $query = "DELETE FROM patients WHERE ID = '$id'";
+        $query = "DELETE FROM nonstaff WHERE ID = '$id'";
         if (mysqli_query($con, $query)) {
-            echo json_encode(["status" => "success", "message" => "Patient deleted successfully!"]);
+            echo json_encode(["status" => "success", "message" => "Doctor deleted successfully!"]);
         } else {
             echo json_encode(["status" => "error", "message" => "Database error: " . mysqli_error($con)]);
         }
     } else {
-        echo json_encode(["status" => "error", "message" => "Missing patient ID"]);
+        echo json_encode(["status" => "error", "message" => "Missing doctor ID"]);
     }
 } else {
     echo json_encode(["status" => "error", "message" => "Invalid request"]);
