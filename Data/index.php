@@ -27,7 +27,7 @@
                           Patient Management
                         </a>
                         <ul class="dropdown-menu dropdown-menu-light" style="width: 100%;">
-                            <li><a class="dropdown-item text-dark" href="/patients.html">View All Patients</a></li>
+                            <li><a class="dropdown-item text-dark" href="patientmanagement.php">View All Patients</a></li>
                             <li><a class="dropdown-item text-dark" data-bs-toggle="modal" data-bs-target="#addPatientModel">Add Patient</a></li>
                         </ul>
                     </li>
