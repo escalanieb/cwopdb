@@ -26,6 +26,7 @@ $result = mysqli_query($con, $sql);
     <script src="https://cd</div>n.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>   
     <h1>Patient Data</h1>
+    
     <table>
         <tr>
             <th>ID</th>
@@ -58,7 +59,7 @@ $result = mysqli_query($con, $sql);
             echo "<td>" . $row['number'] . "</td>";
             echo "<td>" . $row['datetime'] . "</td>";
             echo "<td><a href='edituser.php?id=" . $row['ID'] . "' style='color: Blue; font-size: 15px; text-decoration: none; background-color: none;'>Edit</a></td>";
-            echo "<td><a href='deleteuser.php?id=" . $row['ID'] . "' style='color: Red; font-size: 15px; text-decoration: none; background-color: none;'>Delete</a></td>";
+            echo "<td><a href='deleteuser.php?id=" . $row['ID'] . "' onclick='return confirm(\"Are you sure?\")' style='color: Red; font-size: 15px; text-decoration: none; background-color: none;'>Delete</a></td>";
             echo "</tr>";
         }
         ?>

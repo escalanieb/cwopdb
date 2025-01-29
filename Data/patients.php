@@ -1,3 +1,18 @@
+<?php
+session_start();
+require_once './data/dbconn.php';
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+  // Fetch the product details from the database
+  $sql = "SELECT * FROM `patients`";
+  $result = mysqli_query($con, $sql);
+
+
+?>
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -37,7 +52,7 @@
                           Patient Management
                         </a>
                         <ul class="dropdown-menu dropdown-menu-light" style="width: 100%;">
-                          <li><a class="dropdown-item text-dark" href="/patients.html">View All Patients</a></li>
+                          <li><a class="dropdown-item text-dark" href="patients.php">View All Patients</a></li>
                           <li><a class="dropdown-item text-dark" data-bs-toggle="modal" data-bs-target="#addPatientModel">Add Patient</a></li>
                         </ul>
                     </li>
@@ -93,33 +108,34 @@
                             <thead>
                               <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Last Name</th>
                                 <th scope="col">First Name</th>
+                                <th scope="col">Last Name</th>
+                                <th scope="col">Age</th>
+                                <th scope="col">Gender</th>
                                 <th scope="col">Services</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Action</th>
                               </tr>
                             </thead>
                             <tbody>
-                              <tr>
-                                <th scope="row" class="align-middle">1</th>
-                                <td class="align-middle">Escala</td>
-                                <td class="align-middle">Bien Oliver</td>
-                                <td class="align-middle">Medical Adult</td>
-                                <td><button type="button" class="btn btn-success align-middle">Open</button></td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                          Action
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                          <li><a class="dropdown-item" href="#">View Patients</a></li>
-                                          <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#addPatientModel">Add Patients</a></li>
-                                        </ul>
-                                      </div>
-                                </td>
-                              </tr>
-                            </tbody>
+      
+                            <?php
+        // Loop through each row of the result and display the data in the table
+        while ($row = mysqli_fetch_assoc($result)) {
+            echo "<tr>";
+            echo "<td>" . $row['ID'] . "</td>";
+            echo "<td>" . $row['firstName'] . "</td>";
+            echo "<td>" . $row['lastName'] . "</td>";
+            echo "<td>" . $row['age'] . "</td>";
+            echo "<td>" . $row['gender'] . "</td>";
+            echo "<td>" . $row['services'] . "</td>";
+            echo "<td>" . ($row['status'] == 0 ? 'Done' : 'Ongoing') . "</td>";
+            echo '<td><a data-bs-toggle="modal" data-bs-target="#editPatientModel"?id=' . $row['ID'] . ' style="color: Blue; font-size: 15px; text-decoration: none; background-color: none;">Edit</a>    <a href="deleteuser.php?id=' . $row['ID'] . '" onclick="return confirm(\'Are you sure?\')" style="color: Red; font-size: 15px; text-decoration: none; background-color: none;">Delete</a></td>';
+
+            
+         
+      }
+      ?>
                           </table>
                     </div>
                 </div>
@@ -138,91 +154,210 @@
                 });
             });
               </script>
-                <div class="container-fluid mt-5">
-        <!-- Modal -->
+
+
+        <div class="container-fluid mt-5">
+        <!-- Add Modal -->
         <div class="modal fade" id="addPatientModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
-                <div class="f-flex flex-column">
-                  <h1 class="modal-title fs-5" id="exampleModalLabel">Community Wellness Outreach Program</h1>
-                  <small>Add Patients</small>
-                </div>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="f-flex flex-column">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Community Wellness Outreach Program</h1>
+            <small>Add Patients</small>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
-                <form>
-                  <div class="d-flex flex-row mb-3">
-                    <h6>Medical Information Needed</h6>
-                  </div>
-                  <div class="input-group mb-3">
-                    <span class="input-group-text">First Name</span>
-                    <input type="text" aria-label="First name" class="form-control">
-                    <span class="input-group-text">Last Name</span>
-                    <input type="text" aria-label="Last name" class="form-control">
-                  </div>
-                  <div class="input-group mb-3">
-                    <span class="input-group-text">Age</span>
-                    <input type="text" aria-label="Age" class="form-control">
-                  </div>
-                  <div class="d-flex flex-row mb-3">
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                    <label class="form-check-label" for="flexRadioDefault1">
-                      Male
-                    </label>
-                  </div>
-                  <div class="form-check ms-3">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                    <label class="form-check-label" for="flexRadioDefault1">
-                      Female
-                    </label>
-                  </div>
-                </div>
-                  <div class="d-flex flex-row mb-3">
-                    <select class="form-select" aria-label="Default select example">
-                      <option selected>Select Medical Service</option>
-                      <option value="1">Medical Adult</option>
-                      <option value="2">Medical Pedia</option>
-                      <option value="3">Physical Therapy</option>
-                      <option value="4">Pre-Natal Check Up</option>
-                      <option value="5">Dental Extraction</option>
-                      <option value="6">Eye Screening</option>
-                      <option value="7">Pap Smear</option>
-                    </select>
-                  </div>
-                  <div class="d-flex flex-row mb-3">
-                    <h6>Contact Details and Address</h6>
-                  </div>
-                  <div class="input-group mb-3">
-                    <span class="input-group-text">Facebook</span>
-                    <input type="text" aria-label="First name" class="form-control">
-                  </div>
-                  <div class="input-group mb-3">
-                    <span class="input-group-text">Email</span>
-                    <input type="text" aria-label="Last name" class="form-control">
-                  </div>
-                  <div class="input-group mb-3">
-                    <span class="input-group-text">Complete Address</span>
-                    <input type="text" aria-label="Last name" class="form-control">
-                  </div>
-                  <div class="input-group mb-3">
-                    <span class="input-group-text">Contact Number</span>
-                    <input type="text" aria-label="Last name" class="form-control">
-                  </div>
-                  <div class="input-group mb-3">
-                    <span class="input-group-text">Area (Barangay/Subdivision)</span>
-                    <input type="text" aria-label="Last name" class="form-control">
-                  </div>
-                </form>
+          <form method="POST" action="">
+            <div class="d-flex flex-row mb-3">
+              <h6>Medical Information Needed</h6>
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text">First Name</span>
+              <input type="text" name="firstName"  aria-label="First name" class="form-control">
+              <span class="input-group-text">Last Name</span>
+              <input type="text" name="lastName" aria-label="Last name" class="form-control">
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text">Age</span>
+              <input type="text" name="age" aria-label="Age" class="form-control">
+            </div>
+            <div class="d-flex flex-row mb-3">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="gender" id="flexRadioDefault1" value="male">
+              <label class="form-check-label" for="flexRadioDefault1">
+                Male
+              </label>
+            </div>
+            <div class="form-check ms-3">
+              <input class="form-check-input" type="radio" name="gender" id="flexRadioDefault2" value="female">
+              <label class="form-check-label" for="flexRadioDefault2">
+                Female
+              </label>
+            </div>
+          </div>
+            <div class="d-flex flex-row mb-3">
+              <select class="form-select" name="service" aria-label="Default select example">
+                <option selected>Select Medical Service</option>
+                <option value="1">Medical Adult</option>
+                <option value="2">Medical Pedia</option>
+                <option value="3">Physical Therapy</option>
+                <option value="4">Pre-Natal Check Up</option>
+                <option value="5">Dental Extraction</option>
+                <option value="6">Eye Screening</option>
+                <option value="7">Pap Smear</option>
+              </select>
+            </div>
+            <div class="d-flex flex-row mb-3">
+              <h6>Contact Details and Address</h6>
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text">Facebook</span>
+              <input type="text" name="fbaccount" aria-label="Social" class="form-control">
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text">Email</span>
+              <input type="text" name="email" aria-label="Email" class="form-control">
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text">Complete Address</span>
+              <input type="text" name="address" aria-label="Address" class="form-control">
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text">Contact Number</span>
+              <input type="text" name="number" aria-label="Contact" class="form-control">
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text">Area (Barangay/Subdivision)</span>
+              <input type="text" name="area" aria-label="Area" class="form-control">
+            </div>
+          </form>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Submit</button>
               </div>
             </div>
           </div>
         </div>
+
+<?php
+        if (isset($_GET['ID'])) {
+  $firstName = mysqli_real_escape_string($con, $_POST['firstName']);
+  $lastName = mysqli_real_escape_string($con, $_POST['lastName']);
+  $age = mysqli_real_escape_string($con, $_POST['age']);
+  $gender = mysqli_real_escape_string($con, $_POST['gender']);
+  $services = mysqli_real_escape_string($con, $_POST['services']);
+  $fbaccount = mysqli_real_escape_string($con, $_POST['fbaccount']);
+  $address = mysqli_real_escape_string($con, $_POST['address']);
+  $area = mysqli_real_escape_string($con, $_POST['area']);
+  $email = mysqli_real_escape_string($con, $_POST['email']);
+  $contact = mysqli_real_escape_string($con, $_POST['number']);
+  $status = mysqli_real_escape_string($con, $_POST['status']);
+
+   // Update the product details in the database
+   $sqlUpdate = "UPDATE `patients` SET 
+  firstName = '$firstName', 
+  lastName = '$lastName', 
+  age = '$age', 
+  gender = '$gender', 
+  services = '$services', 
+  fbAccount = '$fbaccount', 
+  address = '$address', 
+  area = '$area', 
+  email = '$email', 
+  contact = '$contact', 
+  status = '$status' 
+  WHERE ID = '$ID'";
+}
+?>
+
+         <!-- Edit Modal -->
+         <div class="modal fade" id="editPatientModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+          <div class="f-flex flex-column">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Community Wellness Outreach Program</h1>
+            <small>Update Patient</small>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+          <form method="POST" action="">
+            <div class="d-flex flex-row mb-3">
+              <h6>Update Medical Information</h6>
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text">First Name</span>
+              <input type="text" name="firstName" value="<?= $row['firstName']; ?>" aria-label="First name" class="form-control">
+              <span class="input-group-text">Last Name</span>
+              <input type="text" name="lastName" value="<?= $row['lastName']; ?>" aria-label="Last name" class="form-control">
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text">Age</span>
+              <input type="text" name="age" value="<?= $row['age']; ?>" aria-label="Age" class="form-control">
+            </div>
+            <div class="d-flex flex-row mb-3">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="gender" id="flexRadioDefault1" value="male">
+              <label class="form-check-label" for="flexRadioDefault1">
+                Male
+              </label>
+            </div>
+            <div class="form-check ms-3">
+              <input class="form-check-input" type="radio" name="gender" id="flexRadioDefault2" value="female">
+              <label class="form-check-label" for="flexRadioDefault2">
+                Female
+              </label>
+            </div>
+          </div>
+            <div class="d-flex flex-row mb-3">
+              <select class="form-select" name="services" aria-label="Default select example">
+                <option selected value="<?= $row['services']; ?>"><?= $row['services']; ?>"</option>
+                <option value="1">Medical Adult</option>
+                <option value="2">Medical Pedia</option>
+                <option value="3">Physical Therapy</option>
+                <option value="4">Pre-Natal Check Up</option>
+                <option value="5">Dental Extraction</option>
+                <option value="6">Eye Screening</option>
+                <option value="7">Pap Smear</option>
+              </select>
+            </div>
+            <div class="d-flex flex-row mb-3">
+              <h6>Contact Details and Address</h6>
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text">Facebook</span>
+              <input type="text" name="fbaccount" value="<?= $row['fbaccount']; ?>" aria-label="Social" class="form-control">
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text">Email</span>
+              <input type="text" name="email" value="<?= $row['email']; ?>" aria-label="Email" class="form-control">
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text">Complete Address</span>
+              <input type="text" name="address" value="<?= $row['address']; ?>" aria-label="Address" class="form-control">
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text">Contact Number</span>
+              <input type="text" name="number" value="<?= $row['number']; ?>" aria-label="Contact" class="form-control">
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text">Area (Barangay/Subdivision)</span>
+              <input type="text" name="area" value="<?= $row['area']; ?>" aria-label="Area" class="form-control">
+            </div>
+          </form>
+              </div>
+              <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Submit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
                 </div>
             </div>
         </div>
