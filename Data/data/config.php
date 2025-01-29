@@ -3,6 +3,6 @@
 	$host = "localhost";
 	$username = "root";
 	$password = "";
-	$database = "CWOP";
+	$database = "cwop";
 
 ?>

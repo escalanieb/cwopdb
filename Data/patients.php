@@ -1,16 +1,14 @@
 <?php
 session_start();
-require_once './data/dbconn.php';
+require_once 'data/dbconn.php';
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
   // Fetch the product details from the database
-  $sql = "SELECT * FROM `patients`";
+  $sql = "SELECT * FROM patients";
   $result = mysqli_query($con, $sql);
-
-
 ?>
 
 <!doctype html>
@@ -19,8 +17,12 @@ error_reporting(E_ALL);
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CWOP Patient Management System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+     <!-- Bootstrap CSS -->
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- DataTables CSS -->
     <link href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
 
     <style>
     #patientTable_wrapper {
@@ -30,11 +32,24 @@ error_reporting(E_ALL);
   </head>
   <body>
     <main>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>   
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-        <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+         <!-- Scripts (Proper Order) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- DataTables Core -->
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+
+    <!-- DataTables Buttons -->
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+
+
         <div class="d-flex flex-row">
             <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark fixed-top" style="width: 280px; height: 100%;">
                 <a href="#" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
@@ -43,7 +58,7 @@ error_reporting(E_ALL);
                 <hr>
                 <ul class="nav nav-pills flex-column mb-auto">
                     <li class="nav-item">
-                        <a href="index.html" class="nav-link text-white" aria-current="page">
+                        <a href="index.php" class="nav-link text-white" aria-current="page">
                             Dashboard
                         </a>
                     </li>
@@ -53,7 +68,6 @@ error_reporting(E_ALL);
                         </a>
                         <ul class="dropdown-menu dropdown-menu-light" style="width: 100%;">
                           <li><a class="dropdown-item text-dark" href="patients.php">View All Patients</a></li>
-                          <li><a class="dropdown-item text-dark" data-bs-toggle="modal" data-bs-target="#addPatientModel">Add Patient</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -101,277 +115,414 @@ error_reporting(E_ALL);
                 </div>
 
                 <div class="container-fluid mt-5">
-                    <h5>Detailed Results</h5>
-                    <hr>
-                    <div class="d-flex flex-row justify-content-center">
-                        <table class="table table-hover w-100" id="patientTable">
-                            <thead>
-                              <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">First Name</th>
-                                <th scope="col">Last Name</th>
-                                <th scope="col">Age</th>
-                                <th scope="col">Gender</th>
-                                <th scope="col">Services</th>
-                                <th scope="col">Status</th>
-                                <th scope="col">Action</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-      
-                            <?php
-        // Loop through each row of the result and display the data in the table
-        while ($row = mysqli_fetch_assoc($result)) {
-            echo "<tr>";
-            echo "<td>" . $row['ID'] . "</td>";
-            echo "<td>" . $row['firstName'] . "</td>";
-            echo "<td>" . $row['lastName'] . "</td>";
-            echo "<td>" . $row['age'] . "</td>";
-            echo "<td>" . $row['gender'] . "</td>";
-            echo "<td>" . $row['services'] . "</td>";
-            echo "<td>" . ($row['status'] == 0 ? 'Done' : 'Ongoing') . "</td>";
-            echo '<td><a data-bs-toggle="modal" data-bs-target="#editPatientModel"?id=' . $row['ID'] . ' style="color: Blue; font-size: 15px; text-decoration: none; background-color: none;">Edit</a>    <a href="deleteuser.php?id=' . $row['ID'] . '" onclick="return confirm(\'Are you sure?\')" style="color: Red; font-size: 15px; text-decoration: none; background-color: none;">Delete</a></td>';
+    <h5>Detailed Results</h5>
+    <hr>
+    <div class="d-flex justify-content-end mb-3">
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPatientModel">
+        Add Patient
+    </button>
+</div>
+    <div class="d-flex flex-row justify-content-center">
+        <table class="table table-hover w-100" id="patientTable">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">Age</th>
+                    <th scope="col">Gender</th>
+                    <th scope="col">Services</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                // Loop through each row of the result and display the data in the table
+                while ($row = mysqli_fetch_assoc($result)) {
+                    echo "<tr>";
+                    echo "<td>" . htmlspecialchars($row['ID'] ?? 'N/A') . "</td>";
+                    echo "<td>" . htmlspecialchars($row['firstName'] ?? 'N/A') . "</td>";
+                    echo "<td>" . htmlspecialchars($row['lastName'] ?? 'N/A') . "</td>";
+                    echo "<td>" . htmlspecialchars($row['age'] ?? 'N/A') . "</td>";
+                    echo "<td>" . htmlspecialchars($row['gender'] ?? 'N/A') . "</td>";
+                    echo "<td>" . htmlspecialchars($row['services'] ?? 'N/A') . "</td>";
+                    echo "<td>" . (isset($row['status']) && $row['status'] == 0 ? 'Done' : 'Ongoing') . "</td>";
+                    echo '<td>
+                        <a href="#" class="editBtn" data-id="' . htmlspecialchars($row['ID'] ?? '0') . '" 
+                           data-bs-toggle="modal" data-bs-target="#editPatientModel" 
+                           style="color: Blue; font-size: 15px; text-decoration: none;">Edit</a>  
+                        <a href="#" class="deleteBtn" data-id="' . htmlspecialchars($row['ID'] ?? '0') . '" 
+                           style="color: Red; font-size: 15px; text-decoration: none;">Delete</a>
+                    </td>';
+                    echo "</tr>";
+                }
+                ?>
+            </tbody>
+        </table>
+    </div>
+</div>
 
-            
-         
-      }
-      ?>
-                          </table>
-                    </div>
-                </div>
-                <script>
-                  $(document).ready(function() {
-                    $('#patientTable').DataTable({
-                    responsive: true,
-                    autoWidth: false, // Forces full width
-                    lengthMenu: [5, 10, 25, 50],
-                    pageLength: 5,
-                    language: {
-                        search: "Search Patients:",
-                        lengthMenu: "Show _MENU_ entries",
-                        info: "Showing _START_ to _END_ of _TOTAL_ patients"
-                    }
-                });
-            });
-              </script>
+<script>
+$(document).ready(function() {
+    console.log("Waiting for table to load...");
+    
+    setTimeout(function() {
+        console.log("Initializing DataTable now...");
+        $('#patientTable').DataTable({
+            responsive: true,
+            autoWidth: false,
+            lengthMenu: [5, 10, 25, 50],
+            pageLength: 5,
+            language: {
+                search: "Search Patients:",
+                lengthMenu: "Show _MENU_ entries",
+                info: "Showing _START_ to _END_ of _TOTAL_ patients"
+            },
+            order: [[0, "asc"]], 
+            paging: true,
+            searching: true,
+            info: true
+        });
+        console.log("DataTable initialized successfully.");
+    }, 1000); // 1-second delay to ensure table loads first
+});
+</script>
+
+
 
 
         <div class="container-fluid mt-5">
-        <!-- Add Modal -->
-        <div class="modal fade" id="addPatientModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-          <div class="f-flex flex-column">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Community Wellness Outreach Program</h1>
-            <small>Add Patients</small>
+
+       <!-- Add Modal -->
+<div class="modal fade" id="addPatientModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="f-flex flex-column">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Community Wellness Outreach Program</h1>
+          <small>Add Patients</small>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Add Form -->
+        <form id="addPatientForm" method="POST" action="add_patient.php">
+
+          <div class="d-flex flex-row mb-3">
+            <h6>Medical Information Needed</h6>
           </div>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-          <form method="POST" action="">
-            <div class="d-flex flex-row mb-3">
-              <h6>Medical Information Needed</h6>
-            </div>
-            <div class="input-group mb-3">
-              <span class="input-group-text">First Name</span>
-              <input type="text" name="firstName"  aria-label="First name" class="form-control">
-              <span class="input-group-text">Last Name</span>
-              <input type="text" name="lastName" aria-label="Last name" class="form-control">
-            </div>
-            <div class="input-group mb-3">
-              <span class="input-group-text">Age</span>
-              <input type="text" name="age" aria-label="Age" class="form-control">
-            </div>
-            <div class="d-flex flex-row mb-3">
+          <div class="input-group mb-3">
+            <span class="input-group-text">First Name</span>
+            <input type="text" name="firstName" aria-label="First name" class="form-control" required>
+            <span class="input-group-text">Last Name</span>
+            <input type="text" name="lastName" aria-label="Last name" class="form-control" required>
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">Age</span>
+            <input type="text" name="age" aria-label="Age" class="form-control" required>
+          </div>
+          <div class="d-flex flex-row mb-3">
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="gender" id="flexRadioDefault1" value="male">
-              <label class="form-check-label" for="flexRadioDefault1">
-                Male
-              </label>
+              <input class="form-check-input" type="radio" name="gender" id="flexRadioDefault1" value="male" required>
+              <label class="form-check-label" for="flexRadioDefault1">Male</label>
             </div>
             <div class="form-check ms-3">
-              <input class="form-check-input" type="radio" name="gender" id="flexRadioDefault2" value="female">
-              <label class="form-check-label" for="flexRadioDefault2">
-                Female
-              </label>
+              <input class="form-check-input" type="radio" name="gender" id="flexRadioDefault2" value="female" required>
+              <label class="form-check-label" for="flexRadioDefault2">Female</label>
             </div>
           </div>
-            <div class="d-flex flex-row mb-3">
-              <select class="form-select" name="service" aria-label="Default select example">
-                <option selected>Select Medical Service</option>
-                <option value="1">Medical Adult</option>
-                <option value="2">Medical Pedia</option>
-                <option value="3">Physical Therapy</option>
-                <option value="4">Pre-Natal Check Up</option>
-                <option value="5">Dental Extraction</option>
-                <option value="6">Eye Screening</option>
-                <option value="7">Pap Smear</option>
-              </select>
-            </div>
-            <div class="d-flex flex-row mb-3">
-              <h6>Contact Details and Address</h6>
-            </div>
-            <div class="input-group mb-3">
-              <span class="input-group-text">Facebook</span>
-              <input type="text" name="fbaccount" aria-label="Social" class="form-control">
-            </div>
-            <div class="input-group mb-3">
-              <span class="input-group-text">Email</span>
-              <input type="text" name="email" aria-label="Email" class="form-control">
-            </div>
-            <div class="input-group mb-3">
-              <span class="input-group-text">Complete Address</span>
-              <input type="text" name="address" aria-label="Address" class="form-control">
-            </div>
-            <div class="input-group mb-3">
-              <span class="input-group-text">Contact Number</span>
-              <input type="text" name="number" aria-label="Contact" class="form-control">
-            </div>
-            <div class="input-group mb-3">
-              <span class="input-group-text">Area (Barangay/Subdivision)</span>
-              <input type="text" name="area" aria-label="Area" class="form-control">
-            </div>
-          </form>
-              </div>
-              <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Submit</button>
-              </div>
-            </div>
+          <div class="d-flex flex-row mb-3">
+            <select class="form-select" name="service" aria-label="Default select example" required>
+              <option selected disabled>Select Medical Service</option>
+              <option value="Medical Adult">Medical Adult</option>
+              <option value="Medical Pedia">Medical Pedia</option>
+              <option value="Physical Therapy">Physical Therapy</option>
+              <option value="Pre-Natal Check Up">Pre-Natal Check Up</option>
+              <option value="Dental Extraction">Dental Extraction</option>
+              <option value="Eye Screening">Eye Screening</option>
+              <option value="Pap Smear">Pap Smear</option>
+            </select>
           </div>
+          <div class="d-flex flex-row mb-3">
+            <h6>Contact Details and Address</h6>
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">Facebook</span>
+            <input type="text" name="fbaccount" aria-label="Social" class="form-control">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">Email</span>
+            <input type="email" name="email" aria-label="Email" class="form-control">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">Complete Address</span>
+            <input type="text" name="address" aria-label="Address" class="form-control" required>
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">Contact Number</span>
+            <input type="text" name="number" aria-label="Contact" class="form-control" required>
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">Area (Barangay/Subdivision)</span>
+            <input type="text" name="area" aria-label="Area" class="form-control">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form>
+        <!-- Success Message -->
+        <div id="addSuccessMessage" class="alert alert-success mt-3" style="display: none;">
+          Patient added successfully!
         </div>
+      </div>
+    </div>
+  </div>
+</div>
 
+<script>
+  $(document).ready(function() {
+    $("#addPatientForm").submit(function(e) {
+      e.preventDefault(); // Prevent page reload
+
+      $.ajax({
+        type: "POST",
+        url: "add_patient.php",
+        data: $(this).serialize(),
+        dataType: "json",
+        success: function(response) {
+          if (response.status === "success") {
+            $("#addPatientForm")[0].reset(); // Clear the form
+            $("#addSuccessMessage").fadeIn(); // Show success message
+            setTimeout(function() {
+              $("#addSuccessMessage").fadeOut();
+              $("#addPatientModel").modal("hide"); // Close the modal
+              location.reload(); // Refresh the page to update the table
+            }, 1500);
+          } else {
+            alert("Error: " + response.message);
+          }
+        }
+      });
+    });
+  });
+</script>
+
+
+<!-- Fetch Patient Data for Editing -->
 <?php
-        if (isset($_GET['ID'])) {
-  $firstName = mysqli_real_escape_string($con, $_POST['firstName']);
-  $lastName = mysqli_real_escape_string($con, $_POST['lastName']);
-  $age = mysqli_real_escape_string($con, $_POST['age']);
-  $gender = mysqli_real_escape_string($con, $_POST['gender']);
-  $services = mysqli_real_escape_string($con, $_POST['services']);
-  $fbaccount = mysqli_real_escape_string($con, $_POST['fbaccount']);
-  $address = mysqli_real_escape_string($con, $_POST['address']);
-  $area = mysqli_real_escape_string($con, $_POST['area']);
-  $email = mysqli_real_escape_string($con, $_POST['email']);
-  $contact = mysqli_real_escape_string($con, $_POST['number']);
-  $status = mysqli_real_escape_string($con, $_POST['status']);
+if (isset($_GET['id'])) {
+    require_once 'data/dbconn.php'; // Ensure correct database connection
 
-   // Update the product details in the database
-   $sqlUpdate = "UPDATE `patients` SET 
-  firstName = '$firstName', 
-  lastName = '$lastName', 
-  age = '$age', 
-  gender = '$gender', 
-  services = '$services', 
-  fbAccount = '$fbaccount', 
-  address = '$address', 
-  area = '$area', 
-  email = '$email', 
-  contact = '$contact', 
-  status = '$status' 
-  WHERE ID = '$ID'";
+    $id = mysqli_real_escape_string($con, $_GET['id']); // Get the ID safely
+    $query = "SELECT * FROM patients WHERE ID = '$id'";
+    $result = mysqli_query($con, $query);
+
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+    } else {
+        $row = []; // Set to an empty array if no data is found
+    }
+} else {
+    $row = []; // Set to an empty array if no ID is provided
 }
 ?>
+<!-- Edit Modal -->
+<div class="modal fade" id="editPatientModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="f-flex flex-column">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Community Wellness Outreach Program</h1>
+          <small>Update Patient</small>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Update Form -->
+        <form id="editPatientForm" method="POST" action="update_patient.php">
+          <!-- Hidden Field to Store Patient ID -->
+          <input type="hidden" name="ID">
 
-         <!-- Edit Modal -->
-         <div class="modal fade" id="editPatientModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-          <div class="f-flex flex-column">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Community Wellness Outreach Program</h1>
-            <small>Update Patient</small>
+          <div class="input-group mb-3">
+            <span class="input-group-text">First Name</span>
+            <input type="text" name="firstName" class="form-control">
+            <span class="input-group-text">Last Name</span>
+            <input type="text" name="lastName" class="form-control">
           </div>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-          <form method="POST" action="">
-            <div class="d-flex flex-row mb-3">
-              <h6>Update Medical Information</h6>
-            </div>
-            <div class="input-group mb-3">
-              <span class="input-group-text">First Name</span>
-              <input type="text" name="firstName" value="<?= $row['firstName']; ?>" aria-label="First name" class="form-control">
-              <span class="input-group-text">Last Name</span>
-              <input type="text" name="lastName" value="<?= $row['lastName']; ?>" aria-label="Last name" class="form-control">
-            </div>
-            <div class="input-group mb-3">
-              <span class="input-group-text">Age</span>
-              <input type="text" name="age" value="<?= $row['age']; ?>" aria-label="Age" class="form-control">
-            </div>
-            <div class="d-flex flex-row mb-3">
+          <div class="input-group mb-3">
+            <span class="input-group-text">Age</span>
+            <input type="text" name="age" class="form-control">
+          </div>
+          <div class="d-flex flex-row mb-3">
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="gender" id="flexRadioDefault1" value="male">
-              <label class="form-check-label" for="flexRadioDefault1">
-                Male
-              </label>
+                <input class="form-check-input" type="radio" name="gender" id="maleRadio" value="Male">
+                <label class="form-check-label" for="maleRadio">Male</label>
             </div>
             <div class="form-check ms-3">
-              <input class="form-check-input" type="radio" name="gender" id="flexRadioDefault2" value="female">
-              <label class="form-check-label" for="flexRadioDefault2">
-                Female
-              </label>
+                <input class="form-check-input" type="radio" name="gender" id="femaleRadio" value="Female">
+                <label class="form-check-label" for="femaleRadio">Female</label>
             </div>
           </div>
-            <div class="d-flex flex-row mb-3">
-              <select class="form-select" name="services" aria-label="Default select example">
-                <option selected value="<?= $row['services']; ?>"><?= $row['services']; ?>"</option>
-                <option value="1">Medical Adult</option>
-                <option value="2">Medical Pedia</option>
-                <option value="3">Physical Therapy</option>
-                <option value="4">Pre-Natal Check Up</option>
-                <option value="5">Dental Extraction</option>
-                <option value="6">Eye Screening</option>
-                <option value="7">Pap Smear</option>
-              </select>
-            </div>
-            <div class="d-flex flex-row mb-3">
-              <h6>Contact Details and Address</h6>
-            </div>
-            <div class="input-group mb-3">
-              <span class="input-group-text">Facebook</span>
-              <input type="text" name="fbaccount" value="<?= $row['fbaccount']; ?>" aria-label="Social" class="form-control">
-            </div>
-            <div class="input-group mb-3">
-              <span class="input-group-text">Email</span>
-              <input type="text" name="email" value="<?= $row['email']; ?>" aria-label="Email" class="form-control">
-            </div>
-            <div class="input-group mb-3">
-              <span class="input-group-text">Complete Address</span>
-              <input type="text" name="address" value="<?= $row['address']; ?>" aria-label="Address" class="form-control">
-            </div>
-            <div class="input-group mb-3">
-              <span class="input-group-text">Contact Number</span>
-              <input type="text" name="number" value="<?= $row['number']; ?>" aria-label="Contact" class="form-control">
-            </div>
-            <div class="input-group mb-3">
-              <span class="input-group-text">Area (Barangay/Subdivision)</span>
-              <input type="text" name="area" value="<?= $row['area']; ?>" aria-label="Area" class="form-control">
-            </div>
-          </form>
-              </div>
-              <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Submit</button>
-              </div>
-            </div>
-          </div>
-        </div>
 
+          <div class="d-flex flex-row mb-3">
+            <select class="form-select" name="services">
+              <option value="">Select Medical Service</option>
+              <option value="Medical Adult">Medical Adult</option>
+              <option value="Medical Pedia">Medical Pedia</option>
+              <option value="Physical Therapy">Physical Therapy</option>
+              <option value="Pre-Natal Check Up">Pre-Natal Check Up</option>
+              <option value="Dental Extraction">Dental Extraction</option>
+              <option value="Eye Screening">Eye Screening</option>
+              <option value="Pap Smear">Pap Smear</option>
+            </select>
+          </div>
+          
+          <div class="input-group mb-3">
+            <span class="input-group-text">Facebook</span>
+            <input type="text" name="fbaccount" class="form-control">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">Email</span>
+            <input type="text" name="email" class="form-control">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">Address</span>
+            <input type="text" name="address" class="form-control">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">Contact Number</span>
+            <input type="text" name="number" class="form-control">
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">Area (Barangay/Subdivision)</span>
+            <input type="text" name="area" class="form-control">
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Update</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- jQuery AJAX for Updating -->
+<script>
+  $(document).ready(function() {
+    $("#editPatientForm").submit(function(e) {
+        e.preventDefault(); // Prevent page reload
+
+        $.ajax({
+            type: "POST",
+            url: "update_patient.php", // Ensure correct path
+            data: $(this).serialize(),
+            dataType: "json",
+            success: function(response) {
+                console.log("Server Response:", response); // Debugging
+                if (response.status === "success") {
+                    alert(response.message); // Display success message from server
+                    location.reload(); // Refresh page to show updated data
+                } else {
+                    alert("Error: " + response.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log("AJAX Error:", error); // Debugging
+                alert("Failed to update patient. Please check the console for details.");
+            }
+        });
+    });
+});
+
+</script>
+
+<script>
+$(document).ready(function() {
+    $(".editBtn").click(function() {
+        var patientId = $(this).data("id"); // Get patient ID from button
+
+        $.ajax({
+            type: "GET",
+            url: "fetch_patient.php?id=" + patientId, // Fetch patient details
+            dataType: "json",
+            success: function(response) {
+                if (response.status === "success") {
+                    // Populate modal fields
+                    $("input[name='ID']").val(response.data.ID);
+                    $("input[name='firstName']").val(response.data.firstName);
+                    $("input[name='lastName']").val(response.data.lastName);
+                    $("input[name='age']").val(response.data.age);
+                    $("input[name='email']").val(response.data.email);
+                    $("input[name='address']").val(response.data.address);
+                    $("input[name='number']").val(response.data.number);
+                    $("input[name='fbaccount']").val(response.data.fbaccount);
+                    $("input[name='area']").val(response.data.area);
+                    
+                    // Set gender radio button
+                    if (response.data.gender.toLowerCase() === "male") {
+                        $("#editPatientModel input[name='gender'][value='Male']").prop("checked", true);
+                    } else if (response.data.gender.toLowerCase() === "female") {
+                        $("#editPatientModel input[name='gender'][value='Female']").prop("checked", true);
+                    }
+
+                    // Set service dropdown
+                    $("select[name='services']").val(response.data.services);
+
+                    console.log("Loaded data into modal:", response.data);
+                } else {
+                    alert("Error: " + response.message);
+                }
+            },
+            error: function() {
+                alert("Failed to fetch patient details.");
+            }
+        });
+    });
+});
+</script>
+
+<script>
+  $(document).ready(function() {
+    $(".deleteBtn").click(function(e) {
+        e.preventDefault(); // Prevent default link behavior
+        var patientId = $(this).data("id");
+
+        if (confirm("Are you sure you want to delete this patient?")) {
+            $.ajax({
+                type: "POST",
+                url: "delete_patient.php", // Ensure correct path
+                data: { id: patientId },
+                dataType: "json",
+                success: function(response) {
+                    console.log("Server Response:", response); // Debugging
+
+                    if (response.status === "success") {
+                        alert(response.message);
+                        location.reload(); // Refresh page to update the list
+                    } else {
+                        alert("Error: " + response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log("AJAX Error:", error);
+                    alert("Failed to delete patient. Please check the console for details.");
+                }
+            });
+        }
+    });
+});
+
+</script>
                 </div>
             </div>
         </div>
     </main>
-<!-- DataTables Buttons Extension -->
-<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
-<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
-
 
 </body>
 </html>
