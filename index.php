@@ -71,47 +71,32 @@ $staff = mysqli_fetch_assoc($result);
     
             <div class="d-flex flex-column flex-fill p-5 bg-light" style="width: auto; margin-left: 15%;">
               <div class="container-fluid">
-                  <h1>Welcome, Admin</h1>
-                  <h6>Welcome to the Dashboard for Community Wellness Outreach Program 2025</h6>
-              </div>
-              <div class="container-fluid mt-5">
                   <h5>General Results</h5>
                   <hr>
                   <div class="d-flex flex-row flex-fill justify-content-start">
                       <div class="card me-3" style="width: 25rem;">
                           <div class="card-body">
-                            <h6 class="card-subtitle text-body-secondary mb-2">Total Number of Patients</h6>
+                            <span class="badge text-bg-primary">Overall Number of Patients</span>
                             <h1 class="card-title"><?php echo $patients["total"]; ?></h1>
                           </div>
                         </div>
                         <div class="card me-3" style="width: 25rem;">
                           <div class="card-body">
-                              <h6 class="card-subtitle text-body-secondary mb-2">Total Number of Doctors</h6>
+                              <span class="badge text-bg-warning">Number of Patients - On-Going</span>
                               <h1 class="card-title"><?php echo $doctors["total"]; ?></h1>
                           </div>
                         </div>
                         <div class="card me-3" style="width: 25rem;">
                           <div class="card-body">
-                              <h6 class="card-subtitle text-body-secondary mb-2">Total Number of Partners</h6>
+                          <span class="badge text-bg-success">Number of Patients - Done</span>
                               <h1 class="card-title"><?php echo $partners["total"]; ?></h1>
-                          </div>
-                        </div>
-                        <div class="card me-3" style="width: 25rem;">
-                          <div class="card-body">
-                              <h6 class="card-subtitle text-body-secondary mb-2">Total Number of Non-ministry Personnels</h6>
-                              <h1 class="card-title"><?php echo $nonstaff["total"]; ?></h1>
-                          </div>
-                        </div>
-                        <div class="card me-3" style="width: 25rem;">
-                          <div class="card-body">
-                              <h6 class="card-subtitle text-body-secondary mb-2">Total Number of Ministry Personnels</h6>
-                              <h1 class="card-title"><?php echo $staff["total"]; ?></h1>
                           </div>
                         </div>
                   </div>
               </div>
 
-              <div class="container-fluid mt-5">
+              <div class="d-flex flex-row flex-fill align-items-start mt-5">
+                <div class="container-fluid">
                   <h5>Detailed Results</h5>
                   <hr>
                   <div class="d-flex flex-row flex-fill justify-content-start">
@@ -122,118 +107,50 @@ $staff = mysqli_fetch_assoc($result);
                               <th scope="col">Services</th>
                               <th scope="col">Number of Patients</th>
                               <th scope="col">Limit Status</th>
-                              <th scope="col">Actions</th>
                             </tr>
                           </thead>
                           <tbody>
                             <tr>
                               <th scope="row">1</th>
                               <td>Medical - Adult</td>
-                              <td>1,300</td>
+                              <td>0</td>
                               <td><button type="button" class="btn btn-success">Open</button></td>
-                              <td>
-                                  <div class="btn-group">
-                                      <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Action
-                                      </button>
-                                      <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">View Patients</a></li>
-                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#addPatientModel">Add Patients</a></li>
-                                      </ul>
-                                    </div>
-                              </td>
                             </tr>
                             <tr>
                               <th scope="row">2</th>
                               <td>Medical - Pedia</td>
-                              <td>500</td>
+                              <td>0</td>
                               <td><button type="button" class="btn btn-success">Open</button></td>
-                              <td>
-                                  <div class="btn-group">
-                                      <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Action
-                                      </button>
-                                      <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">View Patients</a></li>
-                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#addPatientModel">Add Patients</a></li>
-                                      </ul>
-                                    </div>
-                              </td>
                             </tr>
                             <tr>
                               <th scope="row">3</th>
                               <td>Physical Therapy</td>
-                              <td>120</td>
+                              <td>0</td>
                               <td><button type="button" class="btn btn-warning">Almost Limit</button></td>
-                              <td>
-                                  <div class="btn-group">
-                                      <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Action
-                                      </button>
-                                      <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">View Patients</a></li>
-                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#addPatientModel">Add Patients</a></li>
-                                      </ul>
-                                    </div>
-                              </td>
                             </tr>
                             <tr>
                               <th scope="row">4</th>
                               <td>Pre-Natal Check Up</td>
-                              <td>245</td>
+                              <td>0</td>
                               <td><button type="button" class="btn btn-danger">At Limit</button></td>
-                              <td>
-                                  <div class="btn-group">
-                                      <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Action
-                                      </button>
-                                      <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">View Patients</a></li>
-                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#addPatientModel">Add Patients</a></li>
-                                      </ul>
-                                    </div>
-                              </td>
                             </tr>
                             <tr>
                               <th scope="row">5</th>
                               <td>Dental Extraction</td>
-                              <td>400</td>
+                              <td>0</td>
                               <td><button type="button" class="btn btn-success">Open</button></td>
-                              <td>
-                                  <div class="btn-group">
-                                      <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Action
-                                      </button>
-                                      <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">View Patients</a></li>
-                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#addPatientModel">Add Patients</a></li>
-                                      </ul>
-                                    </div>
-                              </td>
                             </tr>
                             <tr>
                               <th scope="row">5</th>
                               <td>Eye Screening</td>
-                              <td>324</td>
+                              <td>0</td>
                               <td><button type="button" class="btn btn-success">Open</button></td>
-                              <td>
-                                  <div class="btn-group">
-                                      <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Action
-                                      </button>
-                                      <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">View Patients</a></li>
-                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#addPatientModel">Add Patients</a></li>
-                                      </ul>
-                                    </div>
-                              </td>
                             </tr>
                           </tbody>
                         </table>
                   </div>
               </div>
-
-              <div class="container-fluid mt-5">
+              <div class="container-fluid">
                   <h5>Counselling Results</h5>
                   <hr>
                   <div class="d-flex flex-row flex-fill justify-content-start">
@@ -241,64 +158,38 @@ $staff = mysqli_fetch_assoc($result);
                           <thead>
                             <tr>
                               <th scope="col">#</th>
-                              <th scope="col">Services</th>
-                              <th scope="col">Number of Patients</th>
-                              <th scope="col">Actions</th>
+                              <th scope="col">Discussion</th>
+                              <th scope="col">Number Counselled</th>
                             </tr>
                           </thead>
                           <tbody>
                             <tr>
                               <th scope="row">1</th>
                               <td>Salvation</td>
-                              <td>1,300</td>
-                              <td>
-                                  <div class="btn-group">
-                                      <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Action
-                                      </button>
-                                      <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">View Patients</a></li>
-                                        <li><a class="dropdown-item" href="#">Add Patients</a></li>
-                                      </ul>
-                                    </div>
-                              </td>
+                              <td>0</td>
                             </tr>
                             <tr>
                               <th scope="row">2</th>
-                              <td>Medical - Pedia</td>
-                              <td>500</td>
-                              <td>
-                                  <div class="btn-group">
-                                      <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Action
-                                      </button>
-                                      <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">View Patients</a></li>
-                                        <li><a class="dropdown-item" href="#">Add Patients</a></li>
-                                      </ul>
-                                    </div>
-                              </td>
+                              <td>Assurance</td>
+                              <td>0</td>
                             </tr>
                             <tr>
                               <th scope="row">3</th>
-                              <td>Physical Therapy</td>
-                              <td>120</td>
-                              <td>
-                                  <div class="btn-group">
-                                      <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Action
-                                      </button>
-                                      <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">View Patients</a></li>
-                                        <li><a class="dropdown-item" href="#">Add Patients</a></li>
-                                      </ul>
-                                    </div>
-                              </td>
+                              <td>Prayer for Health</td>
+                              <td>0</td>
+                            </tr>
+                            <tr>
+                              <th scope="row">3</th>
+                              <td>Baptism</td>
+                              <td>0</td>
                             </tr>
                           </tbody>
                         </table>
                   </div>
               </div>
+              </div>
+
+              
 
               <div class="container-fluid mt-5">
       <!-- Modal -->
