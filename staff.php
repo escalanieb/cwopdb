@@ -103,6 +103,7 @@ error_reporting(E_ALL);
                     <th scope="col">Department</th>
                     <th scope="col">E-mail</th>
                     <th scope="col">Number</th>
+                    <th scope="col">Membership Status</th>
                     <th scope="col">Action</th>
                 </tr>
             </thead>
@@ -116,6 +117,7 @@ error_reporting(E_ALL);
                     echo "<td>" . htmlspecialchars($row['department'] ?? 'N/A') . "</td>";
                     echo "<td>" . htmlspecialchars($row['email'] ?? 'N/A') . "</td>";
                     echo "<td>" . htmlspecialchars($row['number'] ?? 'N/A') . "</td>";
+                    echo "<td>" . htmlspecialchars($row['membership_status'] ?? 'N/A') . "</td>";
                     echo '<td>
                         <a href="#" class="editBtn" data-id="' . htmlspecialchars($row['ID'] ?? '0') . '" 
                            data-bs-toggle="modal" data-bs-target="#editStaffModel" 
