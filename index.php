@@ -22,7 +22,7 @@ error_reporting(E_ALL);
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
+
     <?php include 'sidebar.php'; ?>
 
     <div class="container-fluid p-5 bg-light">
@@ -84,7 +84,7 @@ error_reporting(E_ALL);
               <th scope="row">3</th>
               <td>Physical Therapy</td>
               <td id="totalPatientsPT">Loading...</td>
-              <td><button type="button" class="btn btn-warning">Almost Limit</button></td>
+              <td><button type="button" class="btn btn-success">Almost Limit</button></td>
             </tr>
             <tr>
               <th scope="row">4</th>
@@ -161,19 +161,42 @@ error_reporting(E_ALL);
         $(document).ready(function() {
           function updateButtonStatus() {
             // Update button status for each service
-            const services = [
-              { id: "totalPatientsAdult", limit: 500 },
-              { id: "totalPatientsPedia", limit: 500 },
-              { id: "totalPatientsPT", limit: 100 },
-              { id: "totalPatientsPN", limit: 100 },
-              { id: "totalPatientsDental", limit: 250 },
-              { id: "totalPatientsES", limit: 150 },
-              { id: "totalPatientsDerm", limit: 150 },
-              { id: "totalPatientsPS", limit: 75 }
+            const services = [{
+                id: "totalPatientsAdult",
+                limit: 500
+              },
+              {
+                id: "totalPatientsPedia",
+                limit: 500
+              },
+              {
+                id: "totalPatientsPT",
+                limit: 100
+              },
+              {
+                id: "totalPatientsPN",
+                limit: 100
+              },
+              {
+                id: "totalPatientsDental",
+                limit: 250
+              },
+              {
+                id: "totalPatientsES",
+                limit: 150
+              },
+              {
+                id: "totalPatientsDerm",
+                limit: 150
+              },
+              {
+                id: "totalPatientsPS",
+                limit: 75
+              }
             ];
 
             services.forEach(service => {
-              const totalPatients = parseInt($(`#${service.id}`).text());
+              const totalPatients = parseInt($(`#${service.id}`).text()) || 0; // Ensure valid number
               const button = $(`#${service.id}`).closest('tr').find('button');
 
               if (totalPatients >= service.limit) {
@@ -184,44 +207,48 @@ error_reporting(E_ALL);
             });
           }
 
-          function fetchCounts() {
+          function fetchPatientData() {
             $.ajax({
-              url: 'crud/fetch_patient_count.php',
-              method: 'GET',
-              dataType: 'json',
-              success: function(response) {
-                $("#totalPatients").text(response.total_patients);
-                $("#totalPatientsOnGoing").text(response.total_patients_ongoing);
-                $("#totalPatientsDone").text(response.total_patients_done);
-                $("#totalPatientsAdult").text(response.total_patients_adult);
-                $("#totalPatientsPedia").text(response.total_patients_pedia);
-                $("#totalPatientsPT").text(response.total_patients_PT);
-                $("#totalPatientsPN").text(response.total_patients_PN);
-                $("#totalPatientsDental").text(response.total_patients_dental);
-                $("#totalPatientsES").text(response.total_patients_ES);
-                $("#totalPatientsDerm").text(response.total_patients_DERM);
-                $("#totalPatientsPS").text(response.total_patients_PS);
-                $("#totalPatientsSaved").text(response.total_patients_saved);
-                $("#totalPatientsBaptism").text(response.total_patients_baptism);
-                $("#totalPatientsPrayer").text(response.total_patients_pray);
-                $("#totalPatientsAssurance").text(response.total_patients_assured);
+              url: "crud/fetch_patient_count.php", // Adjust this path if needed
+              type: "GET",
+              dataType: "json",
+              success: function(data) {
+                if (data.error) {
+                  console.error("Error:", data.error);
+                  return;
+                }
 
-                // Update button statuses after fetching counts
+                // Populate HTML elements with fetched data
+                $("#totalPatients").text(data.total_patients);
+                $("#totalPatientsOnGoing").text(data.total_patients_ongoing);
+                $("#totalPatientsDone").text(data.total_patients_done);
+                $("#totalPatientsAdult").text(data.total_patients_adult);
+                $("#totalPatientsPedia").text(data.total_patients_pedia);
+                $("#totalPatientsPT").text(data.total_patients_PT);
+                $("#totalPatientsPN").text(data.total_patients_PN);
+                $("#totalPatientsDental").text(data.total_patients_dental);
+                $("#totalPatientsES").text(data.total_patients_ES);
+                $("#totalPatientsDerm").text(data.total_patients_DERM);
+                $("#totalPatientsPS").text(data.total_patients_PS);
+                $("#totalPatientsSaved").text(data.total_patients_saved);
+                $("#totalPatientsBaptism").text(data.total_patients_baptism);
+                $("#totalPatientsPrayer").text(data.total_patients_pray);
+                $("#totalPatientsAssurance").text(data.total_patients_assured);
+
+                // Call updateButtonStatus after updating the numbers
                 updateButtonStatus();
               },
-              error: function() {
-                // Handle error
-                const errorMessage = "Error loading counts.";
-                $("#totalPatients, #totalPatientsOnGoing, #totalPatientsDone, #totalPatientsAdult, #totalPatientsPedia, #totalPatientsPT, #totalPatientsPN, #totalPatientsDental, #totalPatientsES, #totalPatientsDerm, #totalPatientsPS, #totalPatientsSaved, #totalPatientsBaptism, #totalPatientsPrayer, #totalPatientsAssurance").text(errorMessage);
+              error: function(xhr, status, error) {
+                console.error("AJAX Error:", status, error);
               }
             });
           }
 
-          // Load counts initially
-          fetchCounts();
+          // Fetch data when the page loads
+          fetchPatientData();
 
-          // Auto-refresh every 5 seconds
-          setInterval(fetchCounts, 5000);
+          // Auto-refresh every 5 seconds for live updates
+          setInterval(fetchPatientData, 5000);
         });
       </script>
 
