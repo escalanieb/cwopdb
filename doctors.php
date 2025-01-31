@@ -63,7 +63,7 @@ $result = mysqli_query($con, $sql);
             Add Doctor
           </button>
         </div>
-        <div class="table-responsive">
+        <div class="table-responsive-sm">
           <table class="table table-hover w-100" id="doctorTable">
             <thead>
               <tr>

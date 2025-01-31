@@ -64,7 +64,7 @@ $result = mysqli_query($con, $sql);
             Add Patient
           </button>
         </div>
-        <div class="table-responsive">
+        <div class="table-responsive-sm">
           <table class="table table-hover w-100" id="patientTable">
             <thead>
               <tr>
@@ -134,7 +134,8 @@ $result = mysqli_query($con, $sql);
               ],
               paging: true,
               searching: true,
-              info: true
+              info: true,
+              responsive: true
             });
             console.log("DataTable initialized successfully.");
           }, 1000); // 1-second delay to ensure table loads first
@@ -194,6 +195,7 @@ $result = mysqli_query($con, $sql);
                       <option value="Dental Extraction">Dental Extraction</option>
                       <option value="Eye Screening">Eye Screening</option>
                       <option value="Pap Smear">Pap Smear</option>
+                      <option value="Pap Smear">Dermatology</option>
                     </select>
                   </div>
                   <div class="d-flex flex-row mb-3">
@@ -328,7 +330,7 @@ $result = mysqli_query($con, $sql);
                       <option value="Dental Extraction">Dental Extraction</option>
                       <option value="Eye Screening">Eye Screening</option>
                       <option value="Pap Smear">Pap Smear</option>
-                      <option value="Dermatology">Pap Smear</option>
+                      <option value="Dermatology">Dermatology</option>
                     </select>
                   </div>
 
