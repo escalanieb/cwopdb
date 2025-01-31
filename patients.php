@@ -52,41 +52,9 @@ $result = mysqli_query($con, $sql);
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
 
 
-    <div class="d-flex flex-row">
-      <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark fixed-top" style="width: 280px; height: 100%;">
-        <a href="#" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-          <span class="fs-4" width="40">CWOP System</span>
-        </a>
-        <hr>
-        <ul class="nav nav-pills flex-column mb-auto">
-          <li class="nav-item">
-            <a href="index.php" class="nav-link text-white" aria-current="page">
-              Dashboard
-            </a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle text-white active" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Patient Management
-            </a>
-            <ul class="dropdown-menu dropdown-menu-light" style="width: 100%;">
-              <li><a class="dropdown-item text-dark" href="patients.php">View All Patients</a></li>
-            </ul>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Staff Management
-            </a>
-            <ul class="dropdown-menu dropdown-menu-light" style="width: 100%;">
-              <li><a class="dropdown-item text-dark" href="all.php">View All Personnels</a></li>
-              <li><a class="dropdown-item text-dark" href="doctors.php">View Doctors</a></li>
-              <li><a class="dropdown-item text-dark" href="partners.php">View Partners</a></li>
-              <li><a class="dropdown-item text-dark" href="nonstaff.php">View Non-Ministry Personnels</a></li>
-              <li><a class="dropdown-item text-dark" href="staff.php">View Ministry Personnels</a></li>
-            </ul>
-          </li>
-      </div>
+        <?php include 'sidebar.php'; ?>
 
-      <div class="d-flex flex-column flex-fill p-5 bg-light" style="width: auto; margin-left: 15%;">
+      <div class="d-flex flex-column flex-fill p-5 bg-light" style="width: auto;">
 
         <div class="container-fluid mt-5">
           <h1>Patient Records</h1>
