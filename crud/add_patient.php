@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $area = mysqli_real_escape_string($con, $_POST['area']);
     $number = mysqli_real_escape_string($con, $_POST['number']);
     $datetime = date("Y-m-d H:i:s"); // Capture current timestamp
-    $status = 1; // Default status (1 = Active, 0 = Inactive)
+    $status = "On-Going"; // Default status (1 = Active, 0 = Inactive)
 
     // Insert into database
     $sql = "INSERT INTO patients (firstName, lastName, age, gender, services, fbaccount, address, area, email, number, datetime, status)
